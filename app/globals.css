@@ -15,6 +15,7 @@
 
   --shadow-brutal: 4px 4px 0 #161616;
   --shadow-brutal-sm: 3px 3px 0 #161616;
+  --shadow-brutal-lg: 6px 6px 0 #161616;
 
   --radius-none: 0px;
 
@@ -36,3 +37,143 @@ body {
   border: 3px solid #161616;
 }
 
+.border-b-brutal {
+  border-bottom: 3px solid #161616;
+}
+
+.border-t-brutal {
+  border-top: 3px solid #161616;
+}
+
+.border-r-brutal {
+  border-right: 3px solid #161616;
+}
+
+.border-l-brutal {
+  border-left: 3px solid #161616;
+}
+
+.shadow-brutal-lg {
+  box-shadow: 6px 6px 0 #161616;
+}
+
+/* ─── Keyframes ──────────────────────────────────────────── */
+
+/* Rainbow stripe shimmer — moves a bright highlight rightward */
+@keyframes shimmer-stripe {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Slide up + fade in — for swatch entrance */
+@keyframes slide-up-fade {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stagger title letters in */
+@keyframes stagger-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) skewX(-4deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) skewX(0deg);
+  }
+}
+
+/* Pulse ring for loading button */
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(22, 22, 22, 0.4), 4px 4px 0 #161616; }
+  70% { box-shadow: 0 0 0 8px rgba(22, 22, 22, 0), 4px 4px 0 #161616; }
+  100% { box-shadow: 0 0 0 0 rgba(22, 22, 22, 0), 4px 4px 0 #161616; }
+}
+
+/* Status dot blink */
+@keyframes dot-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+/* Loading skeleton scan line */
+@keyframes scan-line {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
+}
+
+/* Checkmark bounce for copy success */
+@keyframes check-bounce {
+  0% { transform: scale(0) rotate(-12deg); }
+  60% { transform: scale(1.2) rotate(4deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+/* Swatch hover lift */
+@keyframes swatch-lift {
+  from { transform: translateY(0); }
+  to { transform: translateY(-4px); }
+}
+
+/* Typing dots for generating state */
+@keyframes typing-dot {
+  0%, 20% { opacity: 0; }
+  40% { opacity: 1; }
+  80%, 100% { opacity: 0; }
+}
+
+/* ─── Animation utility classes ──────────────────────────── */
+
+.animate-shimmer-stripe {
+  animation: shimmer-stripe 3s linear infinite;
+}
+
+.animate-slide-up-fade {
+  animation: slide-up-fade 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-dot-blink {
+  animation: dot-blink 1.4s ease-in-out infinite;
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 1.2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+.animate-scan-line {
+  animation: scan-line 1.6s ease-in-out infinite;
+}
+
+.animate-check-bounce {
+  animation: check-bounce 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* ─── Stagger delays ─────────────────────────────────────── */
+.stagger-1 { animation-delay: 0ms; }
+.stagger-2 { animation-delay: 60ms; }
+.stagger-3 { animation-delay: 120ms; }
+.stagger-4 { animation-delay: 180ms; }
+.stagger-5 { animation-delay: 240ms; }
+
+/* ─── Palette swatch height tiers ────────────────────────── */
+.swatch-h-sm  { height: 9rem; }   /* 144px */
+.swatch-h-md  { height: 11rem; }  /* 176px */
+.swatch-h-lg  { height: 13rem; }  /* 208px */
+
+/* ─── Reduced-motion overrides ───────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .animate-shimmer-stripe,
+  .animate-slide-up-fade,
+  .animate-dot-blink,
+  .animate-pulse-ring,
+  .animate-scan-line,
+  .animate-check-bounce {
+    animation: none;
+  }
+}

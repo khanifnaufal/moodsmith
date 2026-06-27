@@ -1,4 +1,6 @@
-import { useState } from "react";
+"use client";
+
+import { useState, useRef } from "react";
 import { MoodResult } from "@/types";
 
 interface ExportSectionProps {
@@ -9,6 +11,7 @@ export default function ExportSection({ result }: ExportSectionProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"css" | "json">("css");
   const [copied, setCopied] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const colors = result.palette.colors;
   const font = result.font;
@@ -27,7 +30,7 @@ export default function ExportSection({ result }: ExportSectionProps) {
     try {
       await navigator.clipboard.writeText(cssString);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(() => setCopied(false), 2200);
     } catch (err) {
       console.error("Failed to copy CSS to clipboard:", err);
     }
@@ -57,92 +60,146 @@ export default function ExportSection({ result }: ExportSectionProps) {
   };
 
   return (
-    <div className="flex flex-col gap-4 w-full">
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b-2 border-dashed border-ink/20 pb-2">
-        <h2 className="font-mono-custom text-xs uppercase tracking-widest text-ink/60">
-          Export Style Result
-        </h2>
+    <div className="flex flex-col gap-0 w-full animate-slide-up-fade stagger-5">
+      {/* Section header — dark bar */}
+      <div className="bg-ink text-paper border-brutal flex items-center justify-between px-5 py-3 shadow-brutal">
+        <div className="flex items-center gap-3">
+          <span className="font-mono-custom text-[10px] text-paper/40 uppercase tracking-widest select-none">04</span>
+          <h2 className="font-heading font-black text-sm uppercase tracking-wider text-paper">
+            Export
+          </h2>
+        </div>
+
         <button
+          id="export-toggle-btn"
           onClick={() => setIsOpen(!isOpen)}
-          className="bg-rainbow-lemon hover:bg-rainbow-lemon/90 text-ink border-2 border-ink shadow-brutalSm active:translate-x-0.5 active:translate-y-0.5 active:shadow-none font-heading font-black py-1.5 px-4 text-xs tracking-wider uppercase transition-all select-none rounded-none"
+          className="flex items-center gap-2 font-heading font-black text-xs tracking-wider uppercase bg-paper text-ink border-2 border-paper px-3 py-1.5 hover:bg-rainbow-lemon hover:border-rainbow-lemon active:scale-95 transition-all select-none"
+          aria-expanded={isOpen}
+          aria-controls="export-panel"
         >
-          {isOpen ? "✕ CLOSE EXPORT" : "📦 EXPORT STYLE"}
+          {isOpen ? (
+            <>
+              {/* X icon */}
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+              Close
+            </>
+          ) : (
+            <>
+              {/* Download icon */}
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Export Style
+            </>
+          )}
         </button>
       </div>
 
-      {isOpen && (
-        <div className="border-brutal bg-white p-6 sm:p-8 shadow-brutal flex flex-col gap-6 rounded-none transition-all duration-200">
+      {/* Expandable panel */}
+      <div
+        id="export-panel"
+        ref={contentRef}
+        className={`border-brutal border-t-0 bg-white overflow-hidden transition-all duration-300 ease-in-out ${
+          isOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0 border-0"
+        }`}
+        aria-hidden={!isOpen}
+      >
+        <div className="p-5 sm:p-6 flex flex-col gap-5">
+          {/* Tab toggle pills */}
           <div className="flex flex-col gap-2">
-            <span className="font-mono-custom text-xs uppercase tracking-wider text-ink/50">
-              Select Export Format
+            <span className="font-mono-custom text-[10px] uppercase tracking-wider text-ink/50 select-none">
+              Export Format
             </span>
-            {/* Sliding Switch-like Tabs bar */}
-            <div className="relative flex border-2 border-ink bg-paper p-1 rounded-none select-none max-w-xs overflow-hidden">
-              {/* Sliding Background */}
-              <div
-                className="absolute top-1 bottom-1 left-1 bg-rainbow-lime border-2 border-ink transition-transform duration-300 ease-out"
-                style={{
-                  width: "calc(50% - 4px)",
-                  transform:
-                    activeTab === "json"
-                      ? "translateX(100%)"
-                      : "translateX(0%)",
-                }}
-              />
-
+            <div className="flex gap-0 w-fit border-brutal shadow-brutalXs">
               <button
+                id="tab-css"
                 onClick={() => setActiveTab("css")}
-                className="relative z-10 w-1/2 py-1.5 text-xs font-heading font-black uppercase text-center transition-colors text-ink select-none focus:outline-none"
+                className={`font-heading font-black text-xs uppercase tracking-wider px-4 py-2 transition-colors border-r-2 border-ink select-none focus:outline-none ${
+                  activeTab === "css"
+                    ? "bg-rainbow-lime text-ink"
+                    : "bg-white text-ink/50 hover:text-ink hover:bg-ink/5"
+                }`}
+                aria-selected={activeTab === "css"}
+                role="tab"
               >
-                CSS Variables
+                CSS Vars
               </button>
-
               <button
+                id="tab-json"
                 onClick={() => setActiveTab("json")}
-                className="relative z-10 w-1/2 py-1.5 text-xs font-heading font-black uppercase text-center transition-colors text-ink select-none focus:outline-none"
+                className={`font-heading font-black text-xs uppercase tracking-wider px-4 py-2 transition-colors select-none focus:outline-none ${
+                  activeTab === "json"
+                    ? "bg-rainbow-lime text-ink"
+                    : "bg-white text-ink/50 hover:text-ink hover:bg-ink/5"
+                }`}
+                aria-selected={activeTab === "json"}
+                role="tab"
               >
-                JSON Data
+                JSON
               </button>
             </div>
           </div>
 
-          <div className="flex flex-col gap-4">
-            {activeTab === "css" ? (
-              <div className="flex flex-col gap-3">
-                <div className="relative">
-                  <pre className="border-2 border-ink bg-[#1E1E1E] text-[#D4D4D4] p-4 font-mono-custom text-xs sm:text-sm overflow-x-auto whitespace-pre rounded-none">
-                    {cssString}
-                  </pre>
-                </div>
-                <div>
-                  <button
-                    onClick={handleCopyCSS}
-                    className="w-full sm:w-auto bg-rainbow-sky text-ink border-2 border-ink shadow-brutalSm hover:bg-rainbow-sky/95 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none font-heading font-black py-2 px-6 uppercase text-xs select-none rounded-none transition-all"
-                  >
-                    {copied ? "✓ Copied to Clipboard!" : "📋 Copy CSS to Clipboard"}
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="flex flex-col gap-3">
-                <div className="relative">
-                  <pre className="border-2 border-ink bg-[#1E1E1E] text-[#D4D4D4] p-4 font-mono-custom text-xs sm:text-sm overflow-y-auto max-h-60 overflow-x-auto whitespace-pre rounded-none">
-                    {JSON.stringify(result, null, 2)}
-                  </pre>
-                </div>
-                <div>
-                  <button
-                    onClick={handleDownloadJSON}
-                    className="w-full sm:w-auto bg-rainbow-tangerine text-ink border-2 border-ink shadow-brutalSm hover:bg-rainbow-tangerine/95 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none font-heading font-black py-2 px-6 uppercase text-xs select-none rounded-none transition-all"
-                  >
-                    📥 Download JSON File
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
+          {/* Content */}
+          {activeTab === "css" ? (
+            <div className="flex flex-col gap-3">
+              <pre className="border-2 border-ink bg-[#1a1a2e] text-[#e8e8f0] p-4 font-mono-custom text-xs sm:text-sm overflow-x-auto whitespace-pre leading-relaxed">
+                {cssString}
+              </pre>
+              <button
+                id="copy-css-btn"
+                onClick={handleCopyCSS}
+                className={`flex items-center gap-2 self-start font-heading font-black text-xs uppercase tracking-wider border-brutal px-4 py-2 shadow-brutalSm transition-all select-none active:translate-x-[2px] active:translate-y-[2px] active:shadow-none ${
+                  copied
+                    ? "bg-rainbow-lime text-ink"
+                    : "bg-rainbow-sky text-ink hover:bg-rainbow-sky/90 hover:-translate-y-[1px] hover:shadow-brutal"
+                }`}
+              >
+                {copied ? (
+                  <>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="animate-check-bounce" aria-hidden="true">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <rect x="9" y="9" width="13" height="13" rx="2" />
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                    </svg>
+                    Copy CSS
+                  </>
+                )}
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-3">
+              <pre className="border-2 border-ink bg-[#1a1a2e] text-[#e8e8f0] p-4 font-mono-custom text-xs sm:text-sm overflow-y-auto max-h-56 overflow-x-auto whitespace-pre leading-relaxed">
+                {JSON.stringify(result, null, 2)}
+              </pre>
+              <button
+                id="download-json-btn"
+                onClick={handleDownloadJSON}
+                className="flex items-center gap-2 self-start font-heading font-black text-xs uppercase tracking-wider border-brutal bg-rainbow-tangerine text-ink px-4 py-2 shadow-brutalSm hover:bg-rainbow-tangerine/90 hover:-translate-y-[1px] hover:shadow-brutal active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all select-none"
+              >
+                {/* Download icon */}
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Download JSON
+              </button>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }

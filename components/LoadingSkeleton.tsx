@@ -1,53 +1,104 @@
 export default function LoadingSkeleton() {
+  // Arc heights matching PaletteGrid: sm, md, lg, md, sm
+  const skeletonHeights = ["h-36", "h-44", "h-52", "h-44", "h-36"] as const;
+
   return (
-    <section className="w-full max-w-4xl px-6 pb-24 flex flex-col gap-12 animate-pulse">
-      {/* Skeleton Swatches Container */}
+    <section className="w-full max-w-5xl px-4 sm:px-6 pb-24 flex flex-col gap-12">
+
+      {/* Skeleton Palette */}
       <div className="flex flex-col gap-4">
-        <div className="flex justify-between items-end border-b-2 border-dashed border-ink/20 pb-2">
-          <div className="h-4 bg-ink/10 w-48 rounded-none"></div>
-          <div className="h-3.5 bg-ink/10 w-32 rounded-none hidden sm:inline"></div>
+        {/* Section header skeleton */}
+        <div className="flex items-center gap-3">
+          <div className="h-3 bg-ink/10 w-5 rounded-none" />
+          <div className="h-4 bg-ink/10 w-20 rounded-none" />
+          <div className="h-5 bg-ink/10 w-32 rounded-none" />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
-          {[...Array(5)].map((_, index) => (
+        {/* Arc swatches skeleton */}
+        <div className="flex gap-3 items-end">
+          {skeletonHeights.map((h, index) => (
             <div
               key={index}
-              className="h-36 border-brutal bg-white shadow-brutal relative rounded-none overflow-hidden"
+              className={`flex-1 ${h} border-brutal bg-white shadow-brutal relative overflow-hidden`}
             >
-              {/* Pulsing grey block representing color */}
-              <div className="w-full h-full bg-ink/5"></div>
-              {/* Skeleton Sticker Hex Label */}
-              <div className="absolute bottom-3 left-3 w-20 h-6 border-2 border-ink bg-white rotate-[-2deg] rounded-none flex items-center justify-center">
-                <div className="w-12 h-2.5 bg-ink/15"></div>
-              </div>
+              {/* Pulsing fill */}
+              <div className="w-full h-full bg-ink/5 animate-pulse" />
+
+              {/* Scan line */}
+              <div
+                className="absolute top-0 bottom-0 w-1/4 bg-gradient-to-r from-transparent via-ink/10 to-transparent animate-scan-line"
+                style={{ animationDelay: `${index * 0.15}s` }}
+                aria-hidden="true"
+              />
+
+              {/* Hex label skeleton */}
+              <div className="absolute bottom-2.5 left-2 w-16 h-5 border-2 border-ink bg-white -rotate-2 animate-pulse" />
             </div>
           ))}
         </div>
       </div>
 
-      {/* Skeleton Font Pair Preview Card */}
+      {/* Skeleton Font Preview */}
       <div className="flex flex-col gap-4">
-        <div className="border-b-2 border-dashed border-ink/20 pb-2">
-          <div className="h-4 bg-ink/10 w-64 rounded-none"></div>
+        {/* Section header skeleton */}
+        <div className="flex items-center gap-3">
+          <div className="h-3 bg-ink/10 w-5 rounded-none" />
+          <div className="h-4 bg-ink/10 w-24 rounded-none" />
+          <div className="h-5 bg-ink/10 w-44 rounded-none" />
         </div>
 
-        <div className="border-brutal bg-white p-6 sm:p-10 shadow-brutal flex flex-col gap-6 rounded-none">
-          <div className="border-b-2 border-ink pb-4">
-            {/* Heading font name skeleton */}
-            <div className="h-10 bg-ink/10 w-2/3 rounded-none"></div>
-            {/* Heading font metadata skeleton */}
-            <div className="h-3.5 bg-ink/5 w-1/3 mt-3 rounded-none"></div>
+        {/* Card skeleton */}
+        <div className="border-brutal bg-white shadow-brutal overflow-hidden">
+          {/* Type scale strip skeleton */}
+          <div className="px-6 py-2 border-b-2 border-ink bg-ink/5 flex gap-4">
+            {[...Array(7)].map((_, i) => (
+              <div key={i} className="h-4 w-5 bg-ink/10 animate-pulse" />
+            ))}
           </div>
 
-          <div className="flex flex-col gap-3">
-            {/* Body paragraph lines skeleton */}
-            <div className="h-4 bg-ink/10 w-full rounded-none"></div>
-            <div className="h-4 bg-ink/10 w-11/12 rounded-none"></div>
-            <div className="h-4 bg-ink/10 w-4/5 rounded-none"></div>
-            {/* Body font metadata skeleton */}
-            <div className="h-3.5 bg-ink/5 w-16 mt-3 rounded-none"></div>
+          <div className="grid sm:grid-cols-2 divide-y-2 sm:divide-y-0 sm:divide-x-2 divide-ink">
+            {/* Left skeleton */}
+            <div className="p-6 flex flex-col gap-3">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-ink/10 animate-pulse" />
+                <div className="h-3 bg-ink/10 w-14 animate-pulse" />
+              </div>
+              <div className="h-14 bg-ink/10 w-4/5 animate-pulse -rotate-1" />
+              <div className="flex gap-1.5">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="h-4 w-12 bg-ink/10 animate-pulse" />
+                ))}
+              </div>
+            </div>
+
+            {/* Right skeleton */}
+            <div className="p-6 flex flex-col gap-3">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-ink/10 animate-pulse" />
+                <div className="h-3 bg-ink/10 w-10 animate-pulse" />
+              </div>
+              <div className="border-l-4 border-ink/20 pl-4 flex flex-col gap-2">
+                <div className="h-4 bg-ink/10 w-full animate-pulse" />
+                <div className="h-4 bg-ink/10 w-11/12 animate-pulse" />
+                <div className="h-4 bg-ink/10 w-4/5 animate-pulse" />
+              </div>
+              <div className="h-3 bg-ink/5 w-16 animate-pulse" />
+            </div>
           </div>
         </div>
+      </div>
+
+      {/* Generating label */}
+      <div className="flex items-center gap-2 text-ink/40 select-none">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="animate-spin flex-shrink-0" aria-hidden="true">
+          <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+        </svg>
+        <span className="font-mono-custom text-xs uppercase tracking-wider">
+          Generating your vibe
+          <span style={{ animation: "typing-dot 1.2s 0ms infinite" }}>.</span>
+          <span style={{ animation: "typing-dot 1.2s 200ms infinite" }}>.</span>
+          <span style={{ animation: "typing-dot 1.2s 400ms infinite" }}>.</span>
+        </span>
       </div>
     </section>
   );

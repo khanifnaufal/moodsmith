@@ -81,16 +81,8 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-paper text-ink flex flex-col items-center p-0 selection:bg-rainbow-lemon selection:text-ink font-sans">
-      {/* Floating Toggle Button */}
-      <button
-        onClick={() => setIsSidebarOpen(true)}
-        className="fixed top-6 right-6 z-30 bg-rainbow-sky text-ink font-heading font-bold text-xs sm:text-sm tracking-wider uppercase border-brutal shadow-brutal px-4 py-2 hover:bg-rainbow-sky/95 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all select-none rounded-none"
-      >
-        📁 HISTORY ({history.length})
-      </button>
-
-      {/* Collapsible History Sidebar */}
+    <main className="min-h-screen bg-paper text-ink flex flex-col items-center selection:bg-rainbow-lemon selection:text-ink font-sans">
+      {/* History sidebar — history button lives in Header */}
       <HistorySidebar
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
@@ -99,10 +91,13 @@ export default function Home() {
         onSelect={handleSelectHistory}
       />
 
-      {/* Header and top rainbow stripe */}
-      <Header />
+      {/* Navbar header — contains history button, title, status */}
+      <Header
+        historyCount={history.length}
+        onOpenHistory={() => setIsSidebarOpen(true)}
+      />
 
-      {/* Input area for user prompt */}
+      {/* Input area */}
       <VibeForm
         moodInput={moodInput}
         setMoodInput={setMoodInput}
@@ -110,29 +105,32 @@ export default function Home() {
         onSubmit={handleGenerate}
       />
 
-      {/* Error state notification */}
+      {/* Error state */}
       {error && (
-        <section className="w-full max-w-4xl px-6 pb-12">
-          <div className="border-brutal bg-rainbow-coral p-4 shadow-brutal font-mono-custom text-ink font-semibold flex flex-col gap-1 rounded-none">
-            <span className="font-bold text-lg">ERROR GENERATING STYLE:</span>
-            <span>{error}</span>
+        <section className="w-full max-w-5xl px-4 sm:px-6 pb-8" role="alert">
+          <div className="border-brutal bg-rainbow-coral p-4 shadow-brutal font-mono-custom text-ink flex items-start gap-3">
+            {/* Error icon */}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 mt-0.5" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            <div className="flex flex-col gap-0.5">
+              <span className="font-heading font-black text-sm uppercase">Generation Failed</span>
+              <span className="text-sm">{error}</span>
+            </div>
           </div>
         </section>
       )}
 
-      {/* Skeleton loading display */}
+      {/* Loading skeleton */}
       {loading && <LoadingSkeleton />}
 
-      {/* Output results (Swatches & Font Preview) */}
+      {/* Results */}
       {!loading && result && (
-        <section className="w-full max-w-4xl px-6 pb-24 flex flex-col gap-12">
-          {/* Swatches block with self-contained click-to-copy interactions */}
+        <section className="w-full max-w-5xl px-4 sm:px-6 pb-24 flex flex-col gap-12">
           <PaletteGrid palette={result.palette} />
-
-          {/* Typography pairing card with self-contained dynamic loading */}
           <FontPreview font={result.font} moodInput={result.moodInput} />
-
-          {/* Export card with code copying and JSON download */}
           <ExportSection result={result} />
         </section>
       )}

@@ -23,6 +23,8 @@ const config: Config = {
       boxShadow: {
         brutal: "4px 4px 0 #161616",
         brutalSm: "3px 3px 0 #161616",
+        brutalLg: "6px 6px 0 #161616",
+        brutalXs: "2px 2px 0 #161616",
       },
       borderRadius: {
         none: "0px",
