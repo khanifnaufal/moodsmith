@@ -2,16 +2,57 @@ import { NextRequest, NextResponse } from "next/server";
 import { groq } from "@/lib/groq";
 import { FONT_PAIRINGS } from "@/lib/fontPairings";
 import { MoodResult } from "@/types";
+import { ratelimit } from "@/lib/ratelimit";
 import crypto from "crypto";
 
 export async function POST(req: NextRequest) {
   try {
+    // 1. Validate HTTP method is POST and Content-Type is application/json
+    const contentType = req.headers.get("content-type") || "";
+    if (!contentType.includes("application/json")) {
+      return NextResponse.json(
+        { error: "Content-Type harus application/json" },
+        { status: 400 }
+      );
+    }
+
+    // 2. Rate limiting check
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() || "unknown";
+    try {
+      const { success } = await ratelimit.limit(ip);
+      if (!success) {
+        return NextResponse.json(
+          { error: "Kamu udah generate terlalu banyak hari ini, coba lagi besok ya!" },
+          { status: 429 }
+        );
+      }
+    } catch (ratelimitError) {
+      console.error("Rate limiting check failed:", ratelimitError);
+      // Fallback: allow request in case of Redis/Upstash issues in dev/production
+    }
+
+    // 3. Input validation
     const body = await req.json().catch(() => ({}));
     const { moodInput } = body;
 
-    if (!moodInput || typeof moodInput !== "string" || !moodInput.trim()) {
+    if (typeof moodInput !== "string") {
       return NextResponse.json(
-        { error: "Invalid request. 'moodInput' is required and must be a string." },
+        { error: "Input mood harus berupa teks (string)." },
+        { status: 400 }
+      );
+    }
+
+    const trimmedMood = moodInput.trim();
+    if (trimmedMood.length < 1) {
+      return NextResponse.json(
+        { error: "Input mood tidak boleh kosong." },
+        { status: 400 }
+      );
+    }
+
+    if (trimmedMood.length > 150) {
+      return NextResponse.json(
+        { error: "Input mood tidak boleh lebih dari 150 karakter." },
         { status: 400 }
       );
     }
@@ -48,7 +89,7 @@ Do not include any extra text, comments, markdown blocks, or other keys. Only ou
       const response = await groq.chat.completions.create({
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: `Mood input: ${moodInput}` },
+          { role: "user", content: `Mood input: ${trimmedMood}` },
         ],
         model: "llama-3.1-8b-instant",
         response_format: { type: "json_object" },
@@ -73,7 +114,7 @@ Do not include any extra text, comments, markdown blocks, or other keys. Only ou
         const response = await groq.chat.completions.create({
           messages: [
             { role: "system", content: systemPrompt },
-            { role: "user", content: `Mood input: ${moodInput}` },
+            { role: "user", content: `Mood input: ${trimmedMood}` },
           ],
           model: "llama-3.3-70b-versatile",
           response_format: { type: "json_object" },
@@ -106,7 +147,7 @@ Do not include any extra text, comments, markdown blocks, or other keys. Only ou
       id: crypto.randomUUID(),
       palette: generatedData.palette,
       font: matchedFont,
-      moodInput: moodInput,
+      moodInput: trimmedMood,
       createdAt: new Date().toISOString(),
     };
 
@@ -119,6 +160,23 @@ Do not include any extra text, comments, markdown blocks, or other keys. Only ou
     );
   }
 }
+
+export async function GET() {
+  return NextResponse.json({ error: "Method Not Allowed" }, { status: 405 });
+}
+
+export async function PUT() {
+  return NextResponse.json({ error: "Method Not Allowed" }, { status: 405 });
+}
+
+export async function DELETE() {
+  return NextResponse.json({ error: "Method Not Allowed" }, { status: 405 });
+}
+
+export async function PATCH() {
+  return NextResponse.json({ error: "Method Not Allowed" }, { status: 405 });
+}
+
 
 function validateGeneratedData(data: any): boolean {
   if (!data || typeof data !== "object") return false;

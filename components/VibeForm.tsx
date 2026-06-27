@@ -28,7 +28,7 @@ export default function VibeForm({
         />
         <button
           type="submit"
-          disabled={loading || !moodInput.trim()}
+          disabled={loading}
           className="md:w-48 bg-rainbow-lemon text-ink font-heading font-bold text-lg tracking-wider uppercase border-brutal shadow-brutal px-6 py-4 flex items-center justify-center transition-all select-none rounded-none disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-brutal hover:bg-rainbow-lemon/95 active:translate-x-1 active:translate-y-1 active:shadow-none"
         >
           {loading ? "GENERATING..." : "GENERATE"}

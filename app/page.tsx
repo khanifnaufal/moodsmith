@@ -47,7 +47,7 @@ export default function Home() {
   // Generate palette and font pairing from prompt
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!moodInput.trim() || loading) return;
+    if (loading) return;
 
     setLoading(true);
     setError(null);
