@@ -9,6 +9,7 @@ import PaletteGrid from "@/components/PaletteGrid";
 import FontPreview from "@/components/FontPreview";
 import { getHistory, saveToHistory, deleteFromHistory } from "@/lib/history";
 import HistorySidebar from "@/components/HistorySidebar";
+import ExportSection from "@/components/ExportSection";
 
 export default function Home() {
   const [moodInput, setMoodInput] = useState("");
@@ -130,6 +131,9 @@ export default function Home() {
 
           {/* Typography pairing card with self-contained dynamic loading */}
           <FontPreview font={result.font} moodInput={result.moodInput} />
+
+          {/* Export card with code copying and JSON download */}
+          <ExportSection result={result} />
         </section>
       )}
     </main>
