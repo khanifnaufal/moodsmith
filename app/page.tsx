@@ -137,7 +137,15 @@ export default function Home() {
               return (
                 <div
                   key={item.id}
+                  role="button"
+                  tabIndex={0}
                   onClick={() => handleSelectHistory(item)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      handleSelectHistory(item);
+                    }
+                  }}
                   className="border-brutal bg-white p-3 shadow-brutal-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0_#161616] cursor-pointer transition-all flex flex-col gap-3 group rounded-none"
                 >
                   {/* Card Header: Prompt + Delete */}
