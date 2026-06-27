@@ -5,8 +5,8 @@ export default function LoadingSkeleton() {
   return (
     <section className="w-full max-w-5xl px-4 sm:px-6 pb-24 flex flex-col gap-12">
 
-      {/* Skeleton Palette */}
-      <div className="flex flex-col gap-4">
+      {/* Skeleton Palette — decorative, hidden from AT */}
+      <div className="flex flex-col gap-4" aria-hidden="true">
         {/* Section header skeleton */}
         <div className="flex items-center gap-3">
           <div className="h-3 bg-ink/10 w-5 rounded-none" />
@@ -38,8 +38,8 @@ export default function LoadingSkeleton() {
         </div>
       </div>
 
-      {/* Skeleton Font Preview */}
-      <div className="flex flex-col gap-4">
+      {/* Skeleton Font Preview — decorative, hidden from AT */}
+      <div className="flex flex-col gap-4" aria-hidden="true">
         {/* Section header skeleton */}
         <div className="flex items-center gap-3">
           <div className="h-3 bg-ink/10 w-5 rounded-none" />
@@ -88,16 +88,20 @@ export default function LoadingSkeleton() {
         </div>
       </div>
 
-      {/* Generating label */}
-      <div className="flex items-center gap-2 text-ink/40 select-none">
+      {/* Generating status — polite live region announced to screen readers */}
+      <div
+        role="status"
+        aria-live="polite"
+        className="flex items-center gap-2 text-ink/40 select-none"
+      >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="animate-spin flex-shrink-0" aria-hidden="true">
           <path d="M21 12a9 9 0 1 1-6.219-8.56" />
         </svg>
         <span className="font-mono-custom text-xs uppercase tracking-wider">
           Generating your vibe
-          <span style={{ animation: "typing-dot 1.2s 0ms infinite" }}>.</span>
-          <span style={{ animation: "typing-dot 1.2s 200ms infinite" }}>.</span>
-          <span style={{ animation: "typing-dot 1.2s 400ms infinite" }}>.</span>
+          <span aria-hidden="true" style={{ animation: "typing-dot 1.2s 0ms infinite" }}>.</span>
+          <span aria-hidden="true" style={{ animation: "typing-dot 1.2s 200ms infinite" }}>.</span>
+          <span aria-hidden="true" style={{ animation: "typing-dot 1.2s 400ms infinite" }}>.</span>
         </span>
       </div>
     </section>

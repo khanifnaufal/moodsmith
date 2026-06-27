@@ -154,6 +154,21 @@ body {
   animation: check-bounce 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
+/* Header-specific utilities (replaces inline animation styles) */
+.animate-shimmer-stripe-inline {
+  background: linear-gradient(90deg, #FF6B6B 0%, #FFA63D 16.6%, #FFD93D 33.3%, #6BCB77 50%, #4D96FF 66.6%, #9B5DE5 83.3%, #FF6B6B 100%);
+  background-size: 200% 100%;
+  animation: shimmer-stripe 4s linear infinite;
+}
+
+.animate-stagger-in {
+  animation: stagger-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-dot-blink-inline {
+  animation: dot-blink 2s ease-in-out infinite;
+}
+
 /* ─── Stagger delays ─────────────────────────────────────── */
 .stagger-1 { animation-delay: 0ms; }
 .stagger-2 { animation-delay: 60ms; }
@@ -168,12 +183,27 @@ body {
 
 /* ─── Reduced-motion overrides ───────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
+  /* Named utility classes */
   .animate-shimmer-stripe,
+  .animate-shimmer-stripe-inline,
   .animate-slide-up-fade,
   .animate-dot-blink,
+  .animate-dot-blink-inline,
   .animate-pulse-ring,
   .animate-scan-line,
-  .animate-check-bounce {
-    animation: none;
+  .animate-check-bounce,
+  .animate-stagger-in,
+  /* Tailwind built-ins used in skeletons / spinner */
+  .animate-pulse,
+  .animate-spin {
+    animation: none !important;
+  }
+
+  /* Broad fallback: neutralise any remaining inline animation declarations
+     (covers style="animation: ..." that can't be targeted by class name) */
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
   }
 }

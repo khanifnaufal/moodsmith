@@ -108,6 +108,7 @@ export default function ExportSection({ result }: ExportSectionProps) {
           isOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0 border-0"
         }`}
         aria-hidden={!isOpen}
+        inert={!isOpen || undefined}
       >
         <div className="p-5 sm:p-6 flex flex-col gap-5">
           {/* Tab toggle pills */}

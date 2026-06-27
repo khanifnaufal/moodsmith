@@ -8,13 +8,7 @@ export default function Header({ historyCount, onOpenHistory }: HeaderProps) {
     <>
       {/* Rainbow stripe — 20px with shimmer animation */}
       <div
-        className="w-full h-5 select-none flex-shrink-0"
-        style={{
-          background:
-            "linear-gradient(90deg, #FF6B6B 0%, #FFA63D 16.6%, #FFD93D 33.3%, #6BCB77 50%, #4D96FF 66.6%, #9B5DE5 83.3%, #FF6B6B 100%)",
-          backgroundSize: "200% 100%",
-          animation: "shimmer-stripe 4s linear infinite",
-        }}
+        className="animate-shimmer-stripe-inline w-full h-5 select-none flex-shrink-0"
         aria-hidden="true"
       />
 
@@ -43,8 +37,7 @@ export default function Header({ historyCount, onOpenHistory }: HeaderProps) {
           {/* Center: MOODSMITH title */}
           <div className="flex flex-col items-center text-center flex-1 min-w-0">
             <h1
-              className="font-heading font-black text-3xl sm:text-5xl text-ink tracking-tight uppercase select-none leading-none"
-              style={{ animation: "stagger-in 0.5s cubic-bezier(0.16,1,0.3,1) both" }}
+              className="animate-stagger-in font-heading font-black text-3xl sm:text-5xl text-ink tracking-tight uppercase select-none leading-none"
             >
               MOODSMITH
             </h1>
@@ -59,8 +52,7 @@ export default function Header({ historyCount, onOpenHistory }: HeaderProps) {
             aria-label="Service status: ready"
           >
             <span
-              className="w-2 h-2 rounded-full bg-rainbow-lime flex-shrink-0"
-              style={{ animation: "dot-blink 2s ease-in-out infinite" }}
+              className="animate-dot-blink-inline w-2 h-2 rounded-full bg-rainbow-lime flex-shrink-0"
               aria-hidden="true"
             />
             <span className="hidden sm:inline">Ready</span>

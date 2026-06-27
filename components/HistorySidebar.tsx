@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { MoodResult } from "@/types";
 
 interface HistorySidebarProps {
@@ -18,6 +18,23 @@ export default function HistorySidebar({
   onDelete,
   onSelect,
 }: HistorySidebarProps) {
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
+
+  // Move focus into dialog on open; restore to trigger on close
+  useEffect(() => {
+    if (isOpen) {
+      // Remember what had focus before opening
+      triggerRef.current = document.activeElement as HTMLElement;
+      // Focus the close button as the first interactive element
+      requestAnimationFrame(() => closeButtonRef.current?.focus());
+    } else {
+      // Restore focus to the element that opened the sidebar
+      triggerRef.current?.focus();
+      triggerRef.current = null;
+    }
+  }, [isOpen]);
+
   return (
     <>
       {/* Backdrop */}
@@ -33,11 +50,13 @@ export default function HistorySidebar({
       <aside
         id="history-sidebar"
         role="dialog"
-        aria-modal="true"
+        aria-modal={isOpen}
         aria-label="Past moods history"
+        aria-hidden={!isOpen}
         className={`fixed top-0 left-0 h-full w-[300px] max-w-[85vw] bg-paper z-50 flex flex-col border-r-brutal shadow-brutalLg transform transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
+        inert={!isOpen || undefined}
       >
         {/* Sidebar header — dark bar */}
         <div className="bg-ink text-paper border-b-brutal flex items-center justify-between px-4 py-3 flex-shrink-0">
@@ -57,6 +76,7 @@ export default function HistorySidebar({
 
           {/* Close button */}
           <button
+            ref={closeButtonRef}
             id="close-history-btn"
             onClick={onClose}
             className="w-7 h-7 border-2 border-paper/60 text-paper hover:bg-paper hover:text-ink flex items-center justify-center transition-all active:scale-90 flex-shrink-0"
