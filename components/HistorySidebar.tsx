@@ -53,7 +53,7 @@ export default function HistorySidebar({
         aria-modal={isOpen}
         aria-label="Past moods history"
         aria-hidden={!isOpen}
-        className={`fixed top-0 left-0 h-full w-[300px] max-w-[85vw] bg-paper z-50 flex flex-col border-r-brutal shadow-brutalLg transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 left-0 h-full w-[300px] max-w-[85vw] bg-paper z-50 flex flex-col border-r-brutal shadow-brutalLg transform transition-transform duration-300 ease-in-out min-h-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
         inert={!isOpen || undefined}
@@ -90,7 +90,7 @@ export default function HistorySidebar({
         </div>
 
         {/* Scrollable content */}
-        <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-3">
+        <div className="flex-1 min-h-0 overflow-y-auto p-3 flex flex-col gap-3 scrollbar-brutal">
           {history.length === 0 ? (
             /* Empty state */
             <div className="flex flex-col items-center justify-center gap-3 mt-12 px-4 text-center">
@@ -130,7 +130,7 @@ export default function HistorySidebar({
                       onSelect(item);
                     }
                   }}
-                  className="border-brutal bg-white shadow-brutalXs hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none cursor-pointer transition-all flex flex-col group overflow-hidden"
+                  className="border-brutal bg-white shadow-brutalXs hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none cursor-pointer transition-all flex flex-col group overflow-hidden flex-shrink-0"
                 >
                   {/* Mini palette color bar — full width, 8px tall */}
                   <div className="flex h-2 w-full flex-shrink-0" aria-hidden="true">

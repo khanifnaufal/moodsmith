@@ -149,7 +149,7 @@ export default function ExportSection({ result }: ExportSectionProps) {
           {/* Content */}
           {activeTab === "css" ? (
             <div className="flex flex-col gap-3">
-              <pre className="border-2 border-ink bg-[#1a1a2e] text-[#e8e8f0] p-4 font-mono-custom text-xs sm:text-sm overflow-x-auto whitespace-pre leading-relaxed">
+              <pre className="border-2 border-ink bg-[#1a1a2e] text-[#e8e8f0] p-4 font-mono-custom text-xs sm:text-sm overflow-x-auto whitespace-pre leading-relaxed scrollbar-brutal-dark">
                 {cssString}
               </pre>
               <button
@@ -181,7 +181,7 @@ export default function ExportSection({ result }: ExportSectionProps) {
             </div>
           ) : (
             <div className="flex flex-col gap-3">
-              <pre className="border-2 border-ink bg-[#1a1a2e] text-[#e8e8f0] p-4 font-mono-custom text-xs sm:text-sm overflow-y-auto max-h-56 overflow-x-auto whitespace-pre leading-relaxed">
+              <pre className="border-2 border-ink bg-[#1a1a2e] text-[#e8e8f0] p-4 font-mono-custom text-xs sm:text-sm overflow-y-auto max-h-56 overflow-x-auto whitespace-pre leading-relaxed scrollbar-brutal-dark">
                 {JSON.stringify(result, null, 2)}
               </pre>
               <button

@@ -207,3 +207,95 @@ body {
     transition-duration: 0.001ms !important;
   }
 }
+
+/* ─── Neo-brutalist scrollbar ────────────────────────── */
+/* Applied with .scrollbar-brutal utility class           */
+
+.scrollbar-brutal {
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #161616 #FFFCF2;
+}
+
+/* Chromium / Safari */
+.scrollbar-brutal::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar-brutal::-webkit-scrollbar-track {
+  background: #FFFCF2;
+  border-left: 2px solid #161616;
+}
+
+.scrollbar-brutal::-webkit-scrollbar-thumb {
+  background: #FFFCF2;
+  border: 2px solid #161616;
+  border-right: none;
+  box-shadow: 2px 2px 0 #161616;
+}
+
+.scrollbar-brutal::-webkit-scrollbar-thumb:hover {
+  background: #161616;
+  box-shadow: none;
+}
+
+.scrollbar-brutal::-webkit-scrollbar-thumb:active {
+  background: #161616;
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.2);
+}
+
+.scrollbar-brutal::-webkit-scrollbar-corner {
+  background: #FFFCF2;
+}
+
+/* ─── Dark variant (for dark-bg code blocks) ──────────── */
+
+.scrollbar-brutal-dark {
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #FFFCF2 #1a1a2e;
+}
+
+.scrollbar-brutal-dark::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;          /* horizontal scrollbar height */
+}
+
+.scrollbar-brutal-dark::-webkit-scrollbar-track {
+  background: #1a1a2e;
+  border-left: 2px solid #FFFCF2;
+}
+
+/* horizontal track gets border-top instead */
+.scrollbar-brutal-dark::-webkit-scrollbar-track:horizontal {
+  border-left: none;
+  border-top: 2px solid #FFFCF2;
+}
+
+.scrollbar-brutal-dark::-webkit-scrollbar-thumb {
+  background: #1a1a2e;
+  border: 2px solid #FFFCF2;
+  border-right: none;
+  box-shadow: 2px 2px 0 #FFFCF2;
+}
+
+.scrollbar-brutal-dark::-webkit-scrollbar-thumb:horizontal {
+  border-right: 2px solid #FFFCF2;
+  border-bottom: none;
+  box-shadow: 2px 2px 0 #FFFCF2;
+}
+
+.scrollbar-brutal-dark::-webkit-scrollbar-thumb:hover {
+  background: #FFFCF2;
+  box-shadow: none;
+}
+
+.scrollbar-brutal-dark::-webkit-scrollbar-thumb:active {
+  background: #FFFCF2;
+  box-shadow: inset 1px 1px 0 rgba(0,0,0,0.2);
+}
+
+.scrollbar-brutal-dark::-webkit-scrollbar-corner {
+  background: #1a1a2e;
+}
+
