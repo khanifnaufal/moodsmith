@@ -18,3 +18,12 @@ export type MoodResult = {
   createdAt: string;
   id: string;
 };
+
+export type TemplatePalette = {
+  id: string;
+  name: string;
+  inspiredBy: string;
+  colors: string[]; // 5 hex
+  fontId: string; // refer ke id di FONT_PAIRINGS
+  description: string;
+};
