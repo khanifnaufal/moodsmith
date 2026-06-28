@@ -5,12 +5,11 @@ import { MoodResult, TemplatePalette } from "@/types";
 import Header from "@/components/Header";
 import VibeForm from "@/components/VibeForm";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
-import PaletteGrid from "@/components/PaletteGrid";
-import FontPreview from "@/components/FontPreview";
 import { getHistory, saveToHistory, deleteFromHistory } from "@/lib/history";
 import HistorySidebar from "@/components/HistorySidebar";
 import ExportSection from "@/components/ExportSection";
 import TemplatesSection from "@/components/TemplatesSection";
+import ResultCard from "@/components/ResultCard";
 import { FONT_PAIRINGS } from "@/lib/fontPairings";
 
 type ActiveTab = "generate" | "templates";
@@ -222,13 +221,7 @@ export default function Home() {
         {loading && <LoadingSkeleton />}
 
         {/* Results */}
-        {!loading && result && (
-          <section className="w-full max-w-5xl px-4 sm:px-6 pb-24 flex flex-col gap-12">
-            <PaletteGrid palette={result.palette} />
-            <FontPreview font={result.font} moodInput={result.moodInput} />
-            <ExportSection result={result} />
-          </section>
-        )}
+        {!loading && result && <ResultCard result={result} />}
       </div>
 
       {/* ── Templates tab panel ──────────────────────────────── */}
