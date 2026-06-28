@@ -2,6 +2,16 @@
 
 import { useState } from "react";
 import { ColorPalette } from "@/types";
+import { getContrastRatio, getWcagLevel } from "@/lib/contrast";
+
+const WHITE = "#FFFFFF";
+const BLACK = "#161616";
+
+const BADGE_STYLES: Record<"AAA" | "AA" | "Fail", string> = {
+  AAA:  "bg-rainbow-lime  text-ink border-ink",
+  AA:   "bg-rainbow-lemon text-ink border-ink",
+  Fail: "bg-rainbow-coral text-ink border-ink",
+};
 
 interface PaletteGridProps {
   palette: ColorPalette;
@@ -90,6 +100,26 @@ export default function PaletteGrid({ palette }: PaletteGridProps) {
                 color.toUpperCase()
               )}
             </div>
+
+            {/* WCAG contrast badges */}
+            {(() => {
+              const vsWhiteLevel = getWcagLevel(getContrastRatio(color, WHITE));
+              const vsBlackLevel = getWcagLevel(getContrastRatio(color, BLACK));
+              return (
+                <div className="absolute top-2 left-2 flex flex-col gap-1 pointer-events-none select-none">
+                  {/* vs white */}
+                  <div className={`flex items-center gap-0.5 border-[1.5px] px-1 py-0.5 shadow-brutalXs ${BADGE_STYLES[vsWhiteLevel]}`}>
+                    <span className="font-mono-custom text-[10px] font-bold leading-none">W</span>
+                    <span className="font-mono-custom text-[10px] font-bold leading-none">{vsWhiteLevel}</span>
+                  </div>
+                  {/* vs black */}
+                  <div className={`flex items-center gap-0.5 border-[1.5px] px-1 py-0.5 shadow-brutalXs ${BADGE_STYLES[vsBlackLevel]}`}>
+                    <span className="font-mono-custom text-[10px] font-bold leading-none">B</span>
+                    <span className="font-mono-custom text-[10px] font-bold leading-none">{vsBlackLevel}</span>
+                  </div>
+                </div>
+              );
+            })()}
           </button>
         ))}
       </div>

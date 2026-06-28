@@ -9,8 +9,9 @@ interface ExportSectionProps {
 
 export default function ExportSection({ result }: ExportSectionProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<"css" | "json">("css");
+  const [activeTab, setActiveTab] = useState<"css" | "json" | "tailwind">("css");
   const [copied, setCopied] = useState(false);
+  const [copiedTailwind, setCopiedTailwind] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
   const colors = result.palette.colors;
@@ -26,6 +27,19 @@ export default function ExportSection({ result }: ExportSectionProps) {
   --font-body: '${font.body}', sans-serif;
 }`;
 
+  const tailwindConfigSnippet = `// tailwind.config.ts
+colors: {
+  'vibe-1': '${colors[0] || "#FFFFFF"}',
+  'vibe-2': '${colors[1] || "#FFFFFF"}',
+  'vibe-3': '${colors[2] || "#FFFFFF"}',
+  'vibe-4': '${colors[3] || "#FFFFFF"}',
+  'vibe-5': '${colors[4] || "#FFFFFF"}',
+},
+fontFamily: {
+  heading: ['${font.heading}', 'sans-serif'],
+  body: ['${font.body}', 'sans-serif'],
+}`;
+
   const handleCopyCSS = async () => {
     try {
       await navigator.clipboard.writeText(cssString);
@@ -33,6 +47,16 @@ export default function ExportSection({ result }: ExportSectionProps) {
       setTimeout(() => setCopied(false), 2200);
     } catch (err) {
       console.error("Failed to copy CSS to clipboard:", err);
+    }
+  };
+
+  const handleCopyTailwind = async () => {
+    try {
+      await navigator.clipboard.writeText(tailwindConfigSnippet);
+      setCopiedTailwind(true);
+      setTimeout(() => setCopiedTailwind(false), 2200);
+    } catch (err) {
+      console.error("Failed to copy Tailwind config to clipboard:", err);
     }
   };
 
@@ -133,7 +157,7 @@ export default function ExportSection({ result }: ExportSectionProps) {
               <button
                 id="tab-json"
                 onClick={() => setActiveTab("json")}
-                className={`font-heading font-black text-xs uppercase tracking-wider px-4 py-2 transition-colors select-none focus:outline-none ${
+                className={`font-heading font-black text-xs uppercase tracking-wider px-4 py-2 transition-colors border-r-2 border-ink select-none focus:outline-none ${
                   activeTab === "json"
                     ? "bg-rainbow-lime text-ink"
                     : "bg-white text-ink/50 hover:text-ink hover:bg-ink/5"
@@ -142,6 +166,19 @@ export default function ExportSection({ result }: ExportSectionProps) {
                 role="tab"
               >
                 JSON
+              </button>
+              <button
+                id="tab-tailwind"
+                onClick={() => setActiveTab("tailwind")}
+                className={`font-heading font-black text-xs uppercase tracking-wider px-4 py-2 transition-colors select-none focus:outline-none ${
+                  activeTab === "tailwind"
+                    ? "bg-rainbow-lime text-ink"
+                    : "bg-white text-ink/50 hover:text-ink hover:bg-ink/5"
+                }`}
+                aria-selected={activeTab === "tailwind"}
+                role="tab"
+              >
+                Tailwind
               </button>
             </div>
           </div>
@@ -179,7 +216,7 @@ export default function ExportSection({ result }: ExportSectionProps) {
                 )}
               </button>
             </div>
-          ) : (
+          ) : activeTab === "json" ? (
             <div className="flex flex-col gap-3">
               <pre className="border-2 border-ink bg-[#1a1a2e] text-[#e8e8f0] p-4 font-mono-custom text-xs sm:text-sm overflow-y-auto max-h-56 overflow-x-auto whitespace-pre leading-relaxed scrollbar-brutal-dark">
                 {JSON.stringify(result, null, 2)}
@@ -196,6 +233,38 @@ export default function ExportSection({ result }: ExportSectionProps) {
                   <line x1="12" y1="15" x2="12" y2="3" />
                 </svg>
                 Download JSON
+              </button>
+            </div>
+          ) : (
+            /* Tailwind tab */
+            <div className="flex flex-col gap-3">
+              <pre className="border-2 border-ink bg-[#1a1a2e] text-[#e8e8f0] p-4 font-mono-custom text-xs sm:text-sm overflow-x-auto whitespace-pre leading-relaxed scrollbar-brutal-dark">
+                {tailwindConfigSnippet}
+              </pre>
+              <button
+                id="copy-tailwind-btn"
+                onClick={handleCopyTailwind}
+                className={`flex items-center gap-2 self-start font-heading font-black text-xs uppercase tracking-wider border-brutal px-4 py-2 shadow-brutalSm transition-all select-none active:translate-x-[2px] active:translate-y-[2px] active:shadow-none ${
+                  copiedTailwind
+                    ? "bg-rainbow-lime text-ink"
+                    : "bg-rainbow-sky text-ink hover:bg-rainbow-sky/90 hover:-translate-y-[1px] hover:shadow-brutal"
+                }`}
+              >
+                {copiedTailwind ? (
+                  <>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="animate-check-bounce" aria-hidden="true">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2" />
+                    </svg>
+                    Copy Tailwind Config
+                  </>
+                )}
               </button>
             </div>
           )}
