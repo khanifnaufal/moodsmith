@@ -3,6 +3,7 @@ import { groq } from "@/lib/groq";
 import { FONT_PAIRINGS } from "@/lib/fontPairings";
 import { MoodResult } from "@/types";
 import { ratelimit } from "@/lib/ratelimit";
+import { redis } from "@/lib/redis";
 import crypto from "crypto";
 
 export async function POST(req: NextRequest) {
@@ -150,6 +151,15 @@ Do not include any extra text, comments, markdown blocks, or other keys. Only ou
       moodInput: trimmedMood,
       createdAt: new Date().toISOString(),
     };
+
+    // Persist result to Redis: key result:{id}, TTL 90 days
+    try {
+      const TTL_90_DAYS = 60 * 60 * 24 * 90;
+      await redis.set(`result:${moodResult.id}`, JSON.stringify(moodResult), { ex: TTL_90_DAYS });
+    } catch (redisError) {
+      // Non-fatal: log but still return the result to the client
+      console.error("Failed to persist MoodResult to Redis:", redisError);
+    }
 
     return NextResponse.json(moodResult);
   } catch (error: any) {
